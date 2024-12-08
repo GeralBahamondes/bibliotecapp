@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Libros Disponibles{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4">Libros Disponibles</h2>
+
+    {% if query %}
+    <p>Resultados de la búsqueda para: "{{ query }}"</p>
+    {% endif %}
+
+    <div class="row">
+        {% for libro in libros %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                {% if libro.imagen %}
+                <img src="{{ libro.imagen.url }}" class="card-img-top" alt="{{ libro.titulo }}">
+                {% else %}
+                <img src="{% static 'img/default_book.jpg' %}" class="card-img-top" alt="Imagen no disponible">
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title">{{ libro.titulo }}</h5>
+                    <p class="card-text">Autor: {{ libro.autor }}</p>
+                    <p class="card-text">Género: 
+                        {% if libro.genero == 'Otro' %}
+                            {{ libro.genero_personalizado }}
+                        {% else %}
+                            {{ libro.get_genero_display }}
+                        {% endif %}
+                    </p>
+                    {% if libro.restriccion_edad > 0 %}
+                    <p class="card-text"><small class="text-muted">Restricción de edad: +{{ libro.restriccion_edad }} años</small></p>
+                    {% endif %}
+                    {% if libro.prestado %}
+                    <button class="btn btn-secondary" disabled>Ya prestado</button>
+                    {% else %}
+                    <a href="{% url 'realizar_prestamo' libro.id %}" class="btn btn-primary">Solicitar préstamo</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <p>No se encontraron libros disponibles.</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

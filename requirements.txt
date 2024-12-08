@@ -1,0 +1,7 @@
+django==3.2
+pillow
+django-bootstrap4
+pymysql
+djangorestframework==3.12.4
+djangorestframework-simplejwt==4.8.0
+whitenoise
